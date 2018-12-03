@@ -20,7 +20,8 @@ class ArticleCollection extends Resource
             'author'=>$this->user->name,
             'title'=>$this->title,
             'content'=>$this->body,
-            'tags'=>TagCollection::collection($this->tags),
+            'image'=>isset($this->image) ? asset($this->folder.$this->image) : null,
+            'tags'=>$this->tags->pluck('title'),
             'comments_count'=>$this->comments->count(),
             'href'=>[route('articles.show', $this->id)]
         ];

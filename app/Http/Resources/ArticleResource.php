@@ -20,9 +20,10 @@ class ArticleResource extends JsonResource
             'author'=>$this->user->name,
             'title'=>$this->title,
             'content'=>$this->body,
-            'tags'=>TagCollection::collection($this->tags),
-            'date'=>$this->created_at,
+            'tags'=>$this->tags->pluck('title'),
+            'date'=>$this->created_at->format('d.m.Y @ H:i:s'),
             'comments'=>CommentCollection::collection($this->comments),
+            'image'=>isset($this->image) ? asset($this->folder.$this->image) : null,
         ];
     }
 }

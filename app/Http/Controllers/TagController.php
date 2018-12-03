@@ -15,6 +15,7 @@ class TagController extends Controller
     public function index()
     {
         //
+        return response()->json(['data'=>Tag::select('id', 'title')->get()]);
     }
 
     /**

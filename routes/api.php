@@ -16,7 +16,15 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::get('/tags', 'TagController@index');
 
-Route::get('/articles', 'ArticleController@index')->name('articles.index');
+Route::get('/articles', 'ArticleController@index');
+Route::get('/articles/{article}', 'ArticleController@show');
+Route::post('/articles', 'ArticleController@store');
+Route::post('/articles/{article}', 'ArticleController@update');
+Route::post('/articles/delete/{article}', 'ArticleController@destroy');
 
-Route::get('/articles/{article}', 'ArticleController@show')->name('articles.show');
+Route::get('/test', 'ArticleController@test')->name('articles.test');
+
+Route::post('/register', 'Api\AuthController@register');
+Route::post('/login', 'Api\AuthController@login');

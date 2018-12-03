@@ -8,6 +8,8 @@ class Article extends Model
 {
     protected $fillable=['title', 'body', 'image'];
 
+    public $folder='/uploads/images/';
+
     public function comments(){
         return $this->hasMany(Comment::class);
     }

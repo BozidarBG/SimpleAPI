@@ -12,53 +12,53 @@ Endpoints are:
 
 All users:
 
-GET /api/tags - get the list of tags
-GET /api/articles - get all articles paginated by default articles per page
-GET /api/articles?per_page=integer - integer can be between 2 and 50
-GET /api/articles/id - id of an article
-POST /api/register - must provide name, email, password
-POST /api/login - must provide email and password
+GET /api/tags - get the list of tags<br>
+GET /api/articles - get all articles paginated by default articles per page<br>
+GET /api/articles?per_page=integer - integer can be between 2 and 50<br>
+GET /api/articles/id - id of an article<br>
+POST /api/register - must provide name, email, password<br>
+POST /api/login - must provide email and password<br>
 
-Authenticated users:
-headers: Authorization: Bearer acces_token
+Authenticated users:<br>
+headers: Authorization: Bearer acces_token<br>
 
-POST /api/articles - creates an aricle
-    headers: Content-Type: multipart/form-data
-    body: 
-    {
-        "title": "some title",
-        "body": "some text",
-        "tags[]": id of some tag,
-        "tags[]": id of other tag,
-        "image": upload an image
-    }
+POST /api/articles - creates an aricle<br>
+    headers: Content-Type: multipart/form-data<br>
+    body: <br>
+    {<br>
+        "title": "some title",<br>
+        "body": "some text",<br>
+        "tags[]": id of some tag,<br>
+        "tags[]": id of other tag,<br>
+        "image": upload an image<br>
+    }<br>
+    <br>
+POST /api/articles/id - updates existing article by id<br>
+    headers: Content-Type: multipart/form-data<br>
+    body: <br>
+    {<br>
+        "title": "new title",<br>
+        "body": "new text",<br>
+        "tags[]": id of some tag,<br>
+        "tags[]": id of other tag,<br>
+        "image": upload an image<br>
+    }<br>
+<br>
+POST /api/articles/delete/id - deletes this article (only owner can delete it)<br>
+    <br>
+GET /api/my-articles - auth user can see his own articles<br>
+<br>
+POST /api/comment - creates a comment<br>
+    headers: Content-Type: multipart/form-data<br>
+    body:<br>
+    {<br>
+        "article_id": existing article id,<br>
+        "body": "text of your comment"<br>
+    }<br>
     
-POST /api/articles/id - updates existing article by id
-    headers: Content-Type: multipart/form-data
-    body: 
-    {
-        "title": "new title",
-        "body": "new text",
-        "tags[]": id of some tag,
-        "tags[]": id of other tag,
-        "image": upload an image
-    }
-
-POST /api/articles/delete/id - deletes this article (only owner can delete it)
-    
-GET /api/my-articles - auth user can see his own articles
-
-POST /api/comment - creates a comment
-    headers: Content-Type: multipart/form-data
-    body:
-    {
-        "article_id": existing article id,
-        "body": "text of your comment"
-    }
-    
-
-POST /api/delete-comment/id - deletes a comment if user is an owner of that comment or an owner of article that was commented
-    
-You can test it on:
+<br>
+POST /api/delete-comment/id - deletes a comment if user is an owner of that comment or an owner of article that was commented<br>
+   
+You can test it on:<br>
  
 Cheers !

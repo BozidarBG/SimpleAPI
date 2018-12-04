@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class TagController extends Controller
 {
@@ -14,8 +15,10 @@ class TagController extends Controller
      */
     public function index()
     {
-        //
-        return response()->json(['data'=>Tag::select('id', 'title')->get()]);
+        $tags = Cache::remember('tags', 1440, function () {
+            return Tag::select('id', 'title')->get();
+        });
+        return response()->json(['data'=>$tags]);
     }
 
     /**

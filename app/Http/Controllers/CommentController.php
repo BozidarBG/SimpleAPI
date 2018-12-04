@@ -7,79 +7,42 @@ use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function __construct()
     {
-        //
+        $this->middleware('auth:api');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'article_id'=>'required|integer',
+            'body'=>'required|string'
+        ]);
+
+        $articlesIds=\App\Article::all()->pluck('id')->toArray();
+        if(!in_array($request->article_id, $articlesIds)){
+            return response()->json(['error'=>'This article does not exist'], 404);
+        }
+
+        $comment=new Comment();
+        $comment->user_id=\Auth::id();
+        $comment->article_id=$request->article_id;
+        $comment->body=$request->body;
+        $comment->save();
+
+        return response()->json(['success'=>$comment], 200);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Comment  $comment
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Comment $comment)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Comment  $comment
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Comment $comment)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Comment  $comment
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Comment $comment)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Comment  $comment
-     * @return \Illuminate\Http\Response
-     */
+    //comment can be deleted by person who commented or owner of commented article
     public function destroy(Comment $comment)
     {
-        //
+        if($comment->user_id == \Auth::id() || $comment->article->user->id == \Auth::id()){
+
+            $comment->delete();
+
+            return response()->json(['success'=>'Comment deleted'], 200);
+        }
+        return response()->json(['error'=>'You can only delete your comments'], 403);
     }
 }

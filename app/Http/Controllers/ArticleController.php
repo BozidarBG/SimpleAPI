@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Article;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use App\Http\Resources\ArticleCollection;
 use App\Http\Resources\ArticleResource;
 use Illuminate\Http\Request;
@@ -25,6 +27,7 @@ class ArticleController extends Controller
     public function index(Request $request)
     {
 
+        $page=LengthAwarePaginator::resolveCurrentPage();
         $perPage=10;
         //if request contains ?per_page=integer, we will display that many results per page
         //if request is wrong, we will return error
@@ -40,9 +43,24 @@ class ArticleController extends Controller
             }
             $perPage=$request->per_page;
         }
-        $articles=Article::with('comments')->paginate($perPage);
+        $articlesCollection=Article::with('comments')->get();
+        //od kog elementa slajsujemo i koliko komada
+        //index počinje od nula... ako smo na prvoj stranici, page-1=0 * 0 =0 znači od 0 do 10-tog člana (bez rbr.10)
+        //ako smo na drugoj 2-1*10 = od 10-tog člana do dalje
+        $results=$articlesCollection->slice(($page-1)*$perPage, $perPage)->values();
 
-        return ArticleCollection::collection($articles);
+        //rezultati, veličina kolekcije, koliko kom po stranici, trenutna stranica i opcije.
+        //path nam pomaže da nadjemo sledeću i prethodnu stranicu
+        $paginated = new LengthAwarePaginator($results, $articlesCollection->count(), $perPage, $page,[
+            'path'=>LengthAwarePaginator::resolveCurrentPath()
+        ]);
+
+        //moramo da kažemo da uključi i ostale parametre da ne bi ignorisao per_page=X
+        //http://simpleapi.test/api/articles?per_page=3&page=2
+        $paginated->appends(request()->all());
+
+
+        return ArticleCollection::collection($paginated);
     }
 
 

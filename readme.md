@@ -59,6 +59,6 @@ POST /api/comment - creates a comment<br>
 <br>
 POST /api/delete-comment/id - deletes a comment if user is an owner of that comment or an owner of article that was commented<br>
    
-You can test it on:<br>
+You can test it on: https://bozidar-simpleapi.000webhostapp.com <br>
  
 Cheers !
